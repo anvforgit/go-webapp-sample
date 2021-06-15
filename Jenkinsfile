@@ -81,7 +81,7 @@ pipeline {
       // agent any
       steps {
         echo '===============Deploy to stage Start==========================='
-        sh "ssh -i .ssh/project_key.pem ubuntu@172.31.92.124'docker pull anatolev/go-test:latest' "
+        sh "ssh -i \.ssh\/project_key.pem ubuntu@172.31.92.124'docker pull anatolev/go-test:latest' "
         sh "ssh -i .ssh/project_key.pem ubuntu@172.31.92.124'docker stop go-test' "
         sh "ssh -i .ssh/project_key.pem ubuntu@172.31.92.124 'docker run --name go-test --rm -d --privileged   --publish 8000:8080 anatolev/go-test:latest' "
         sh "ssh -i .ssh/project_key.pem ubuntu@172.31.92.124'docker ps' "

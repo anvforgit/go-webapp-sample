@@ -29,33 +29,33 @@ pipeline {
     //      }
     //     }
     // }
-    stage('sonar-scanner') {
-      steps {
-        // def sonarqubeScannerHome = tool name: 'SonarScanner 4.6.2.2472', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-        withCredentials([string(credentialsId: 'sonar', variable: 'sonarLogin')]) {
-          // sh "/opt/sonar-scanner/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=go-test -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GT -Dsonar.sources=. -Dsonar.tests=test/ -Dsonar.language=go"
-          sh "/opt/sonar-scanner/bin/sonar-scanner \
-            -Dsonar.go.coverageReportPaths=coverage.out \
-            -Dsonar.host.url=http://sonarqube:9000 \
-            -Dsonar.login=${sonarLogin} \
-            -Dsonar.projectName=go-test \
-            -Dsonar.coverage.dtdVerification=false \
-            -Dsonar.test.inclusions=/**_test.go \
-            -Dsonar.projectVersion=${env.BUILD_NUMBER} \
-            -Dsonar.projectKey=GT \
-            -Dsonar.sources=. \
-            -Dsonar.tests=test/ \
-            -Dsonar.language=go"
-          // sh "/opt/sonar-scanner/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=2e9fd15216a9d5f2fff4789458233c58fbcb93d0 -Dsonar.projectName=go-test -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GT -Dsonar.sources=. -Dsonar.tests=test/ -Dsonar.language=go"
-        }
-      }
-    }
+    // stage('sonar-scanner') {
+    //   steps {
+    //     // def sonarqubeScannerHome = tool name: 'SonarScanner 4.6.2.2472', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+    //     withCredentials([string(credentialsId: 'sonar', variable: 'sonarLogin')]) {
+    //       // sh "/opt/sonar-scanner/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=go-test -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GT -Dsonar.sources=. -Dsonar.tests=test/ -Dsonar.language=go"
+    //       sh "/opt/sonar-scanner/bin/sonar-scanner \
+    //         -Dsonar.go.coverageReportPaths=coverage.out \
+    //         -Dsonar.host.url=http://sonarqube:9000 \
+    //         -Dsonar.login=${sonarLogin} \
+    //         -Dsonar.projectName=go-test \
+    //         -Dsonar.coverage.dtdVerification=false \
+    //         -Dsonar.test.inclusions=/**_test.go \
+    //         -Dsonar.projectVersion=${env.BUILD_NUMBER} \
+    //         -Dsonar.projectKey=GT \
+    //         -Dsonar.sources=. \
+    //         -Dsonar.tests=test/ \
+    //         -Dsonar.language=go"
+    //       // sh "/opt/sonar-scanner/bin/sonar-scanner -e -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=2e9fd15216a9d5f2fff4789458233c58fbcb93d0 -Dsonar.projectName=go-test -Dsonar.projectVersion=${env.BUILD_NUMBER} -Dsonar.projectKey=GT -Dsonar.sources=. -Dsonar.tests=test/ -Dsonar.language=go"
+    //     }
+    //   }
+    // }
 
     stage('Build Image') {
       // agent {dockerfile true}
       steps {
         echo '=======================Build Docker Image Start==============='
-        sh "docker build -t sem4docker/go-test:latest . "
+        sh "docker build -t anatolev/go-test:latest . "
         echo '=======================Build Docker Image End================='
       }
     }
@@ -73,21 +73,21 @@ pipeline {
     stage('Upload Artifact') {
       steps {
         echo '===============Upload Artifact Start==========================='
-        sh "docker push sem4docker/go-test:latest "
+        sh "docker push anatolev/go-test:latest "
         echo '===============Upload Artifact End============================='
         }
     }
-    stage('Deploy to stage') {
-      // agent any
-      steps {
-        echo '===============Deploy to stage Start==========================='
-        sh "ssh stage 'docker pull sem4docker/go-test:latest' "
-        sh "ssh stage 'docker stop go-test' "
-        sh "ssh stage 'docker run --name go-test --rm -d --privileged   --publish 8000:8080 sem4docker/go-test:latest' "
-        sh "ssh stage 'docker ps' "
-        echo '===============Deploy to stage End============================='
-        }
-    }
+    // stage('Deploy to stage') {
+    //   // agent any
+    //   steps {
+    //     echo '===============Deploy to stage Start==========================='
+    //     sh "ssh stage 'docker pull anatolev/go-test:latest' "
+    //     sh "ssh stage 'docker stop go-test' "
+    //     sh "ssh stage 'docker run --name go-test --rm -d --privileged   --publish 8000:8080 anatolev/go-test:latest' "
+    //     sh "ssh stage 'docker ps' "
+    //     echo '===============Deploy to stage End============================='
+    //     }
+    // }
   }
   post {
         always {

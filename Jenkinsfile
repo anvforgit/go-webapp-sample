@@ -12,14 +12,14 @@ pipeline {
       }
     }
 
-    stage('Unit Test') {
-      // agent any
-      steps {
-        echo '=======================Some Tests Start======================='
-        sh "go test ./... -coverprofile=coverage.out"
-        echo '=======================Some Tests End========================='
-      }
-    }
+    // stage('Unit Test') {
+    //   // agent any
+    //   steps {
+    //     echo '=======================Some Tests Start======================='
+    //     sh "go test ./... -coverprofile=coverage.out"
+    //     echo '=======================Some Tests End========================='
+    //   }
+    // }
 
     // stage('SonarQube analysis') {
     //     steps {
